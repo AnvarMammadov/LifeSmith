@@ -42,10 +42,52 @@ namespace LifeSmith.Dialog
             choice.ApplyEffects(relationship);
         }
 
-        // Create a simple example dialog for Emily
+        // Initialize dialogs
+        public void LoadAllDialogs()
+        {
+            // Path relative to execution directory
+            string dialogsDir = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Content", "Dialogs");
+            
+            // Ensure directory exists
+            if (!System.IO.Directory.Exists(dialogsDir))
+            {
+                System.Console.WriteLine($"Dialog directory not found: {dialogsDir}, creating it.");
+                System.IO.Directory.CreateDirectory(dialogsDir);
+            }
+
+            if (System.IO.Directory.Exists(dialogsDir))
+            {
+                var files = System.IO.Directory.GetFiles(dialogsDir, "*.json");
+                System.Console.WriteLine($"Found {files.Length} dialog files.");
+                
+                foreach (var file in files)
+                {
+                    System.Console.WriteLine($"Loading dialog: {file}");
+                    var nodes = DialogLoader.LoadDialogFromFile(file);
+                    foreach (var node in nodes)
+                    {
+                        AddNode(node);
+                    }
+                }
+            }
+        }
+
+        // Kept for compatibility but now loads from JSON
         public void CreateEmilyDialog()
         {
-            // Opening node
+            LoadAllDialogs();
+            
+            // Fallback: If JSON loading failed (empty nodes), create hardcoded version
+            if (_nodes.Count == 0)
+            {
+                System.Console.WriteLine("JSON loading returned no nodes, falling back to hardcoded dialog.");
+                CreateHardcodedEmilyDialog();
+            }
+        }
+        
+        private void CreateHardcodedEmilyDialog()
+        {
+             // Opening node
             var node1 = new DialogNode("emily_greeting", "Emily", 
                 "Oh, you're the locksmith? Thank you for coming so quickly!", "happy");
             

@@ -1,0 +1,98 @@
+{
+  "characterId": "emily",
+  "rootNodeId": "greeting",
+  "nodes": [
+    {
+      "id": "greeting",
+      "characterName": "Emily",
+      "text": "Oh, you're the locksmith? Thank you for coming so quickly!",
+      "expression": "happy",
+      "choices": [
+        {
+          "text": "No problem, happy to help! (Friendly)",
+          "nextNodeId": "friendly",
+          "trustModifier": 5,
+          "attractionModifier": 2
+        },
+        {
+          "text": "It's my job. Let's get started. (Professional)",
+          "nextNodeId": "professional",
+          "trustModifier": 3
+        },
+        {
+          "text": "You look lovely today... (Flirty)",
+          "nextNodeId": "flirty",
+          "trustModifier": -2,
+          "attractionModifier": 5
+        }
+      ]
+    },
+    {
+      "id": "friendly",
+      "characterName": "Emily",
+      "text": "You seem like a nice person! I was really worried about this lock.",
+      "expression": "happy",
+      "choices": [
+        {
+          "text": "Don't worry, I'll have it open in no time!",
+          "nextNodeId": "work",
+          "trustModifier": 3
+        }
+      ]
+    },
+    {
+      "id": "professional",
+      "characterName": "Emily",
+      "text": "Of course. The lock is right here. I really appreciate your help.",
+      "expression": "neutral",
+      "choices": [
+        {
+          "text": "Let me take a look at it.",
+          "nextNodeId": "work",
+          "trustModifier": 2
+        }
+      ]
+    },
+    {
+      "id": "flirty",
+      "characterName": "Emily",
+      "text": "Oh... um, thank you. *blushes* Should we focus on the lock?",
+      "expression": "flirty",
+      "choices": [
+        {
+          "text": "You're right, sorry. Let me get to work. (Apologize)",
+          "nextNodeId": "work",
+          "trustModifier": 1,
+          "attractionModifier": 2
+        },
+        {
+          "text": "Of course, but I meant it. (Double down)",
+          "nextNodeId": "bold",
+          "trustModifier": -3,
+          "attractionModifier": 8
+        }
+      ]
+    },
+    {
+      "id": "bold",
+      "characterName": "Emily",
+      "text": "*giggles nervously* You're quite forward... Let's see if you're as good with locks as you are with words.",
+      "expression": "flirty",
+      "choices": [
+        {
+          "text": "I'm good with my hands in general. (Confident)",
+          "nextNodeId": "work",
+          "attractionModifier": 5
+        }
+      ]
+    },
+    {
+      "id": "work",
+      "characterName": "Emily",
+      "text": "Alright, I'll let you work. Just call me if you need anything!",
+      "expression": "happy",
+      "isEndNode": true,
+      "choices": []
+    }
+  ]
+}

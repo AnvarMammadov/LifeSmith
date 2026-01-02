@@ -58,13 +58,13 @@ namespace LifeSmith.Scenes
             };
             _interactables.Add(bedButton);
 
-            // Door - right side - only show if we have a job
+            // Door - right (only if job exists)
             if (JobManager.Instance.CurrentJob != null)
             {
                 var doorButton = new InteractableObject(
-                    new Rectangle(1000, 200, 150, 200),
-                    "Door",
-                    OnDoorClicked
+                   new Rectangle(1000, 200, 150, 400),
+                   "Door",
+                   OnDoorClicked
                 )
                 {
                     IdleColor = new Color(139, 69, 19),
@@ -72,6 +72,26 @@ namespace LifeSmith.Scenes
                 };
                 _interactables.Add(doorButton);
             }
+            
+            // Laptop - Shop
+            var laptopButton = new InteractableObject(
+                new Rectangle(200, 450, 200, 150),
+                "Laptop - Shop",
+                OnLaptopClicked
+            )
+            {
+                IdleColor = new Color(50, 50, 70),
+                HoverColor = new Color(80, 80, 120)
+            };
+            _interactables.Add(laptopButton);
+            
+            // Debug items
+            var debugMoney = new InteractableObject(new Rectangle(50, 650, 150, 50), "DEBUG: +$100");
+            debugMoney.OnClick += () => {
+                GameStateManager.Instance.AddMoney(100);
+                System.Console.WriteLine($"Money: {GameStateManager.Instance.Money}");
+            };
+            _interactables.Add(debugMoney);
         }
 
         private void OnPhoneClicked()
@@ -81,17 +101,12 @@ namespace LifeSmith.Scenes
             try
             {
                 // Check if there's an available job
-                System.Console.WriteLine($"Available jobs count: {JobManager.Instance.AvailableJobs.Count}");
-                System.Console.WriteLine($"Current job: {JobManager.Instance.CurrentJob}");
-                
                 if (JobManager.Instance.AvailableJobs.Count > 0 && JobManager.Instance.CurrentJob == null)
                 {
                     var job = JobManager.Instance.AvailableJobs[0];
                     System.Console.WriteLine($"Accepting job: {job.Name}");
                     JobManager.Instance.AcceptJob(job);
-                    System.Console.WriteLine("Job accepted, setting refresh flag");
                     _needsRefresh = true; // Set flag instead of calling CreateInteractables directly
-                    System.Console.WriteLine("Refresh flag set");
                 }
                 else
                 {
@@ -101,7 +116,6 @@ namespace LifeSmith.Scenes
             catch (System.Exception ex)
             {
                 System.Console.WriteLine($"Exception in OnPhoneClicked: {ex.Message}");
-                System.Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
 
@@ -127,6 +141,11 @@ namespace LifeSmith.Scenes
                 Game.SceneManager.ChangeScene(new JobSiteScene());
             }
         }
+        
+        private void OnLaptopClicked()
+        {
+            Game.SceneManager.ChangeScene(new ShopScene());
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -141,7 +160,6 @@ namespace LifeSmith.Scenes
             // Refresh after iteration is complete
             if (_needsRefresh)
             {
-                System.Console.WriteLine("Refreshing interactables after update loop");
                 CreateInteractables();
                 _needsRefresh = false;
             }
@@ -158,7 +176,7 @@ namespace LifeSmith.Scenes
 
             // Draw title and info
             SpriteBatch.DrawString(_font, _titleText, new Vector2(450, 20), Color.White);
-            SpriteBatch.DrawString(_font, _moneyText, new Vector2(50, 20), Color.Yellow);
+            SpriteBatch.DrawString(_font, _moneyText ?? "$0", new Vector2(50, 20), Color.Yellow);
             SpriteBatch.DrawString(_font, $"Day {GameStateManager.Instance.CurrentDay} - {GameStateManager.Instance.TimeOfDay}", 
                 new Vector2(1000, 20), Color.Cyan);
             SpriteBatch.DrawString(_font, _instructions, new Vector2(150, 680), new Color(150, 150, 150));

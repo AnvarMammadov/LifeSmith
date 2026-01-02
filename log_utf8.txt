@@ -1,0 +1,35 @@
+﻿  Determining projects to restore...
+  Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)
+  Tool 'dotnet-mgcb' (version '3.8.4') was restored. Available commands: mgcb
+  Tool 'dotnet-mgcb-editor' (version '3.8.4') was restored. Available commands: mgcb-editor
+  Tool 'dotnet-mgcb-editor-linux' (version '3.8.4') was restored. Available commands: mgcb-editor-linux
+  Tool 'dotnet-mgcb-editor-windows' (version '3.8.4') was restored. Available commands: mgcb-editor-windows
+  Tool 'dotnet-mgcb-editor-mac' (version '3.8.4') was restored. Available commands: mgcb-editor-mac
+  
+  Restore was successful.
+  All projects are up-to-date for restore.
+  Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)
+  Tool 'dotnet-mgcb' (version '3.8.4') was restored. Available commands: mgcb
+  Tool 'dotnet-mgcb-editor' (version '3.8.4') was restored. Available commands: mgcb-editor
+  Tool 'dotnet-mgcb-editor-linux' (version '3.8.4') was restored. Available commands: mgcb-editor-linux
+  Tool 'dotnet-mgcb-editor-windows' (version '3.8.4') was restored. Available commands: mgcb-editor-windows
+  Tool 'dotnet-mgcb-editor-mac' (version '3.8.4') was restored. Available commands: mgcb-editor-mac
+  
+  Restore was successful.
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(74,37): error CS1061: 'EntryPoint' does not contain a definition for 'IsDiscovered' and no accessible extension method 'IsDiscovered' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Minigames\TouchMinigame.cs(39,23): error CS1061: 'InputManager' does not contain a definition for 'IsLeftMouseButtonDown' and no accessible extension method 'IsLeftMouseButtonDown' accepting a first argument of type 'InputManager' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(182,24): error CS1061: 'EntryPoint' does not contain a definition for 'Discover' and no accessible extension method 'Discover' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(188,24): error CS1061: 'EntryPoint' does not contain a definition for 'Prepare' and no accessible extension method 'Prepare' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+
+Build FAILED.
+
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(74,37): error CS1061: 'EntryPoint' does not contain a definition for 'IsDiscovered' and no accessible extension method 'IsDiscovered' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Minigames\TouchMinigame.cs(39,23): error CS1061: 'InputManager' does not contain a definition for 'IsLeftMouseButtonDown' and no accessible extension method 'IsLeftMouseButtonDown' accepting a first argument of type 'InputManager' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(182,24): error CS1061: 'EntryPoint' does not contain a definition for 'Discover' and no accessible extension method 'Discover' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+C:\Users\anvar\source\repos\LifeSmith\Scenes\JobSiteScene.cs(188,24): error CS1061: 'EntryPoint' does not contain a definition for 'Prepare' and no accessible extension method 'Prepare' accepting a first argument of type 'EntryPoint' could be found (are you missing a using directive or an assembly reference?) [C:\Users\anvar\source\repos\LifeSmith\LifeSmith.csproj]
+    0 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:01.55
+
+Workload updates are available. Run `dotnet workload list` for more information.

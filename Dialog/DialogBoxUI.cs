@@ -132,8 +132,15 @@ namespace LifeSmith.Dialog
 
         private Rectangle GetChoiceRect(int index)
         {
-            int choiceY = _bounds.Y + _bounds.Height - 200 + (index * 50);
-            return new Rectangle(_bounds.X + 50, choiceY, _bounds.Width - 100, 40);
+            // Center choices in the middle of the screen, not inside the dialog box
+            // Assuming 1280x720 resolution
+            int startY = 300; 
+            int choiceHeight = 50;
+            int padding = 10;
+            
+            int choiceY = startY + (index * (choiceHeight + padding));
+            // Center horizontally: 1280/2 = 640. Width 800. X = 640 - 400 = 240.
+            return new Rectangle(240, choiceY, 800, choiceHeight);
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
@@ -146,9 +153,19 @@ namespace LifeSmith.Dialog
             // Draw character name
             if (_currentNode != null)
             {
-                string nameText = $"{_currentNode.CharacterName} [{_currentNode.Expression}]";
+                string nameText = $"{_currentNode.CharacterName}";
+                // Draw name background for better visibility
+                var nameSize = font.MeasureString(nameText);
+                var nameRect = new Rectangle(_bounds.X, _bounds.Y - 30, (int)nameSize.X + 60, 30);
+                spriteBatch.Draw(_pixelTexture, nameRect, _nameColor);
+                
                 spriteBatch.DrawString(font, nameText, 
-                    new Vector2(_bounds.X + 30, _bounds.Y + 20), _nameColor);
+                    new Vector2(_bounds.X + 30, _bounds.Y - 25), Color.Black);
+                
+                // Draw Expression
+                string exprText = $"({_currentNode.Expression})";
+                spriteBatch.DrawString(font, exprText,
+                    new Vector2(_bounds.X + nameRect.Width + 10, _bounds.Y - 25), Color.LightGray);
             }
             
             // Draw relationship stats (small)
@@ -158,47 +175,61 @@ namespace LifeSmith.Dialog
                 string attractionText = $"Attraction: {_currentRelationship.GetAttractionLevel()} ({(int)_currentRelationship.Attraction})";
                 
                 spriteBatch.DrawString(font, trustText,
-                    new Vector2(_bounds.Right - 350, _bounds.Y + 15),
+                    new Vector2(_bounds.Right - 350, _bounds.Y - 25),
                     Color.Cyan, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
                     
                 spriteBatch.DrawString(font, attractionText,
-                    new Vector2(_bounds.Right - 350, _bounds.Y + 35),
+                    new Vector2(_bounds.Right - 350, _bounds.Y - 10),
                     Color.Pink, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
             }
             
             // Draw dialog text with word wrap
             DrawWrappedText(spriteBatch, font, _displayedText, 
-                new Vector2(_bounds.X + 30, _bounds.Y + 70), 
+                new Vector2(_bounds.X + 30, _bounds.Y + 40), 
                 _bounds.Width - 60, _textColor);
             
             // Draw typing indicator if not complete
             if (!_isTypingComplete)
             {
-                spriteBatch.DrawString(font, "▼", 
-                    new Vector2(_bounds.Right - 50, _bounds.Bottom - 50), 
+                spriteBatch.DrawString(font, "...", 
+                    new Vector2(_bounds.Right - 50, _bounds.Bottom - 30), 
                     _textColor);
             }
             else if (_availableChoices.Count > 0)
             {
-                // Draw choices
-                spriteBatch.DrawString(font, "Choose:", 
-                    new Vector2(_bounds.X + 30, _bounds.Y + _bounds.Height - 230), 
-                    Color.Yellow, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
-                
+                // Draw choices overlay (darken background slightly)
+                Rectangle fullscreen = new Rectangle(0, 0, 1280, 720);
+                spriteBatch.Draw(_pixelTexture, fullscreen, new Color(0, 0, 0, 100)); // Dim background
+            
                 for (int i = 0; i < _availableChoices.Count; i++)
                 {
                     var choice = _availableChoices[i];
                     var choiceRect = GetChoiceRect(i);
                     
                     // Draw choice background
-                    Color bgColor = i == _selectedChoiceIndex ? 
-                        new Color(80, 80, 100, 200) : new Color(40, 40, 50, 150);
+                    bool isSelected = i == _selectedChoiceIndex;
+                    Color bgColor = isSelected ? 
+                        new Color(100, 100, 150, 240) : new Color(40, 40, 60, 200);
+                        
+                    // Add hover effect border
+                    if (isSelected)
+                    {
+                        Rectangle border = new Rectangle(choiceRect.X - 2, choiceRect.Y - 2, choiceRect.Width + 4, choiceRect.Height + 4);
+                        spriteBatch.Draw(_pixelTexture, border, Color.White);
+                    }
+                    
                     spriteBatch.Draw(_pixelTexture, choiceRect, bgColor);
                     
-                    // Draw choice text
-                    Color textColor = i == _selectedChoiceIndex ? _selectedChoiceColor : _choiceColor;
-                    spriteBatch.DrawString(font, $"{i + 1}. {choice.Text}", 
-                        new Vector2(choiceRect.X + 10, choiceRect.Y + 8), 
+                    // Center text in choice box
+                    Vector2 textSize = font.MeasureString(choice.Text);
+                    Vector2 textPos = new Vector2(
+                        choiceRect.Center.X - textSize.X * 0.4f, // Scale is 0.8
+                        choiceRect.Center.Y - textSize.Y * 0.4f
+                    );
+                    
+                    Color textColor = isSelected ? _selectedChoiceColor : _choiceColor;
+                    spriteBatch.DrawString(font, choice.Text, 
+                        textPos, 
                         textColor, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
                 }
             }

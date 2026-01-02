@@ -18,6 +18,8 @@ namespace LifeSmith.Core
             _spriteBatch = spriteBatch;
         }
 
+        public Scene CurrentScene => _currentScene;
+
         public void ChangeScene(Scene newScene)
         {
             _nextScene = newScene;

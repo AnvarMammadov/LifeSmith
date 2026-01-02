@@ -32,7 +32,7 @@ namespace LifeSmith.Minigames
         public int TotalPins => _pins.Count;
         public int LockedPins => _pins.Count(p => p.IsLocked);
 
-        public LockPickingMinigame(GraphicsDevice graphicsDevice, int difficulty, Rectangle bounds)
+        public LockPickingMinigame(GraphicsDevice graphicsDevice, int difficulty, Rectangle bounds, float extraTolerance = 0f)
         {
             _random = new Random();
             _bounds = bounds;
@@ -45,6 +45,9 @@ namespace LifeSmith.Minigames
             _pins = new List<LockPin>();
             int pinCount = Math.Min(3 + difficulty, 7); // 3-7 pins based on difficulty
             float tolerance = 0.08f - (difficulty * 0.01f); // Harder = smaller tolerance
+            
+            // Apply upgrade bonus
+            tolerance += extraTolerance;
             
             for (int i = 0; i < pinCount; i++)
             {

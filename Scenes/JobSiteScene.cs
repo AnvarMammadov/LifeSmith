@@ -142,9 +142,38 @@ namespace LifeSmith.Scenes
 
         private void OnLockClicked()
         {
-            // Start lock picking minigame
+            // 1. Check for Story Events (First encounter, special events, etc.)
+            var evt = EventManager.Instance.CheckForEvent("OnInteract", "Door");
+            if (evt != null)
+            {
+                EventManager.Instance.ExecuteEvent(evt);
+                
+                if (evt.ActionType == "Dialog")
+                {
+                    // Start dialog
+                    System.Console.WriteLine($"Starting Dialog Event: {evt.ActionValue}");
+                    var dialogManager = GameStateManager.Instance.DialogManager;
+                    var node = dialogManager.GetNode(evt.ActionValue);
+                    if (node != null)
+                    {
+                        var relationship = dialogManager.GetRelationship("Emily"); // Hardcoded char for now
+                        _dialogBox.StartDialog(node, relationship);
+                        return; // Don't start minigame yet
+                    }
+                }
+            }
+
+            // 2. Start lock picking minigame (Default action)
             var minigameBounds = new Rectangle(200, 100, 880, 520);
-            _lockPickingMinigame = new LockPickingMinigame(GraphicsDevice, _currentHouse.LockDifficulty, minigameBounds);
+            
+            // Check for upgrades
+            float extraTolerance = 0f;
+            if (GameStateManager.Instance.HasTool("advanced_lockpick"))
+            {
+                extraTolerance = 0.05f; // Significant bonus
+            }
+            
+            _lockPickingMinigame = new LockPickingMinigame(GraphicsDevice, _currentHouse.LockDifficulty, minigameBounds, extraTolerance);
             _isLockPicking = true;
         }
 

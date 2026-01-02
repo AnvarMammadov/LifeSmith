@@ -87,5 +87,22 @@ namespace LifeSmith.Core
         {
             PreparedEntryPoints.Clear();
         }
+
+        public void CopyFrom(GameStateManager other)
+        {
+            CurrentDay = other.CurrentDay;
+            TimeOfDay = other.TimeOfDay;
+            Money = other.Money;
+            
+            Inventory = new List<string>(other.Inventory);
+            UnlockedTools = new HashSet<string>(other.UnlockedTools);
+            
+            CurrentJobHouseId = other.CurrentJobHouseId;
+            CompletedJobs = new List<string>(other.CompletedJobs);
+            PreparedEntryPoints = new Dictionary<string, bool>(other.PreparedEntryPoints);
+            
+            // Dialog state (If needed, copy relationship data here)
+            // Ideally DialogManager should have its own Save/Load logic or expose data structure
+        }
     }
 }
