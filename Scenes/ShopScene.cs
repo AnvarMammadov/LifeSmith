@@ -31,7 +31,7 @@ namespace LifeSmith.Scenes
             _items = ShopManager.Instance.AvailableItems;
             _buyButtonRects = new List<Rectangle>();
             
-            _backButtonRect = new Rectangle(50, 650, 200, 50);
+            _backButtonRect = new Rectangle(50, 750, 200, 50); // Adjusted for 900px height, above nav bar (780)
         }
 
         public override void Update(GameTime gameTime)
@@ -80,7 +80,7 @@ namespace LifeSmith.Scenes
             
             // Money display
             string moneyText = $"Money: ${GameStateManager.Instance.Money}";
-            SpriteBatch.DrawString(_font, moneyText, new Vector2(1000, 30), Color.LightGreen);
+            SpriteBatch.DrawString(_font, moneyText, new Vector2(1350, 30), Color.LightGreen);
 
             // Draw Items
             int startY = 100;
@@ -93,7 +93,7 @@ namespace LifeSmith.Scenes
             {
                 var item = _items[i];
                 int yPos = startY + (i * (itemHeight + padding));
-                Rectangle itemRect = new Rectangle(50, yPos, 1180, itemHeight);
+                Rectangle itemRect = new Rectangle(50, yPos, 1500, itemHeight);
                 Rectangle buyBtnRect = new Rectangle(itemRect.Right - 150, yPos + 20, 120, 40);
                 
                 _buyButtonRects.Add(buyBtnRect); // Track button for input

@@ -14,6 +14,7 @@ namespace LifeSmith.Core
         private SpriteBatch _spriteBatch;
 
         private InventoryUI _inventoryUI;
+        private NavigationBarUI _navigationBarUI;
         private SpriteFont _globalFont;
 
         public SceneManager(Game1 game, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
@@ -22,11 +23,14 @@ namespace LifeSmith.Core
             _graphicsDevice = graphicsDevice;
             _spriteBatch = spriteBatch;
             
-            // Core UI systems
+            // Core UI systems for 1600x900 resolution
             try
             {
                 _globalFont = game.Content.Load<SpriteFont>("DefaultFont");
                 _inventoryUI = new InventoryUI(graphicsDevice, _globalFont);
+                
+                _navigationBarUI = new NavigationBarUI(game, _globalFont);
+                _navigationBarUI.OnInventoryToggle += () => _inventoryUI.Toggle();
             }
             catch
             {
@@ -67,6 +71,7 @@ namespace LifeSmith.Core
             }
 
             _currentScene?.Update(gameTime);
+            _navigationBarUI?.Update();
             _inventoryUI?.Update();
         }
 
@@ -78,7 +83,8 @@ namespace LifeSmith.Core
             if (_inventoryUI != null)
             {
                 _spriteBatch.Begin();
-                _inventoryUI.Draw(_spriteBatch);
+                _navigationBarUI?.Draw(_spriteBatch); // Draw Nav Bar first
+                _inventoryUI.Draw(_spriteBatch);      // Draw Inventory on top
                 _spriteBatch.End();
             }
         }

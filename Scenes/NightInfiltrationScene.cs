@@ -59,7 +59,7 @@ namespace LifeSmith.Scenes
                 if (GameStateManager.Instance.Inventory.Contains(keyId))
                 {
                     var keyButton = new InteractableObject(
-                        new Rectangle(400, yPos, 400, 70),
+                        new Rectangle(500, yPos, 600, 70),
                         "Use Copied Key (Front Door) - 100%",
                         OnKeyEntry
                     )
@@ -74,7 +74,7 @@ namespace LifeSmith.Scenes
                 foreach (var entry in _preparedEntries)
                 {
                     var entryButton = new InteractableObject(
-                        new Rectangle(400, yPos, 400, 70),
+                        new Rectangle(500, yPos, 600, 70),
                         $"{entry.Name} - {(int)(entry.BaseSuccessChance * 100)}% chance",
                         () => OnAttemptEntry(entry)
                     )
@@ -86,9 +86,9 @@ namespace LifeSmith.Scenes
                     yPos += 90;
                 }
 
-                // Return home button (mission abort)
+                // Return home button (mission abort) - adjusted for 1600x900, above nav bar
                 var returnButton = new InteractableObject(
-                    new Rectangle(100, 600, 150, 60),
+                    new Rectangle(100, 700, 200, 60),
                     "Abort Mission",
                     OnReturnHome
                 )
@@ -102,7 +102,7 @@ namespace LifeSmith.Scenes
             {
                 // Successfully inside - collect items and H-scene
                 var collectButton = new InteractableObject(
-                    new Rectangle(400, 250, 300, 80),
+                    new Rectangle(550, 250, 500, 80),
                     "Collect Valuables",
                     OnCollectItems
                 )
@@ -114,7 +114,7 @@ namespace LifeSmith.Scenes
 
                 // H-Scene button (placeholder)
                 var hSceneButton = new InteractableObject(
-                    new Rectangle(400, 350, 300, 80),
+                    new Rectangle(550, 350, 500, 80),
                     "Approach Character",
                     OnHSceneStart
                 )
@@ -126,7 +126,7 @@ namespace LifeSmith.Scenes
 
                 // Escape button
                 var escapeButton = new InteractableObject(
-                    new Rectangle(400, 500, 300, 80),
+                    new Rectangle(550, 500, 500, 80),
                     "Escape",
                     OnEscape
                 )
@@ -179,8 +179,8 @@ namespace LifeSmith.Scenes
 
         private void OnHSceneStart()
         {
-            // Start touch minigame
-            var minigameBounds = new Rectangle(100, 50, 1080, 620);
+            // Start touch minigame (adjusted for 1600x900)
+            var minigameBounds = new Rectangle(200, 50, 1200, 700);
             _touchMinigame = new TouchMinigame(GraphicsDevice, _currentHouse.ResidentName, minigameBounds);
             _isTouchMinigame = true;
         }
@@ -251,10 +251,10 @@ namespace LifeSmith.Scenes
                 return; // Don't draw anything else
             }
 
-            // Draw title
+            // Draw title (adjusted for 1600x900)
             SpriteBatch.DrawString(_font, $"Night Infiltration - {_currentHouse.ResidentName}'s House", 
-                new Vector2(250, 20), Color.White);
-            SpriteBatch.DrawString(_font, _statusMessage, new Vector2(150, 80), Color.Yellow);
+                new Vector2(400, 20), Color.White);
+            SpriteBatch.DrawString(_font, _statusMessage, new Vector2(300, 80), Color.Yellow);
 
             // Draw interactables
             foreach (var interactable in _interactables)

@@ -9,6 +9,7 @@ namespace LifeSmith.Scenes
     public class PlayerApartmentScene : Scene
     {
         private Texture2D _pixelTexture;
+        private Texture2D _background;
         private SpriteFont _font;
         private List<InteractableObject> _interactables = new();
         private bool _needsRefresh = false; // Flag to refresh interactables
@@ -24,6 +25,9 @@ namespace LifeSmith.Scenes
             _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
 
+            // Load Background
+            _background = TextureManager.Instance.GetBackground("home_smith");
+
             // Load SpriteFont
             _font = Game.Content.Load<SpriteFont>("DefaultFont");
 
@@ -34,45 +38,6 @@ namespace LifeSmith.Scenes
         {
             _interactables.Clear();
 
-            // Phone - top left
-            var phoneButton = new InteractableObject(
-                new Rectangle(50, 100, 150, 80),
-                "Phone",
-                OnPhoneClicked
-            )
-            {
-                IdleColor = new Color(50, 150, 50),
-                HoverColor = new Color(100, 255, 100)
-            };
-            _interactables.Add(phoneButton);
-
-            // Bed - center
-            var bedButton = new InteractableObject(
-                new Rectangle(450, 300, 200, 100),
-                "Bed",
-                OnBedClicked
-            )
-            {
-                IdleColor = new Color(100, 100, 200),
-                HoverColor = new Color(150, 150, 255)
-            };
-            _interactables.Add(bedButton);
-
-            // Door - right (only if job exists)
-            if (JobManager.Instance.CurrentJob != null)
-            {
-                var doorButton = new InteractableObject(
-                   new Rectangle(1000, 200, 150, 400),
-                   "Door",
-                   OnDoorClicked
-                )
-                {
-                    IdleColor = new Color(139, 69, 19),
-                    HoverColor = new Color(205, 133, 63)
-                };
-                _interactables.Add(doorButton);
-            }
-            
             // Laptop - Shop
             var laptopButton = new InteractableObject(
                 new Rectangle(200, 450, 200, 150),
@@ -80,13 +45,17 @@ namespace LifeSmith.Scenes
                 OnLaptopClicked
             )
             {
-                IdleColor = new Color(50, 50, 70),
-                HoverColor = new Color(80, 80, 120)
+                IdleColor = Color.Transparent,
+                HoverColor = new Color(255, 255, 255, 50)
             };
             _interactables.Add(laptopButton);
             
-            // Debug items
-            var debugMoney = new InteractableObject(new Rectangle(50, 650, 150, 50), "DEBUG: +$100");
+            // Debug items (Keep visible for now or make transparent too)
+            var debugMoney = new InteractableObject(new Rectangle(50, 650, 150, 50), "DEBUG: +$100")
+            {
+                 IdleColor = new Color(0, 0, 0, 100),
+                 HoverColor = new Color(0, 0, 0, 200)
+            };
             debugMoney.OnClick += () => {
                 GameStateManager.Instance.AddMoney(100);
                 System.Console.WriteLine($"Money: {GameStateManager.Instance.Money}");
@@ -170,29 +139,46 @@ namespace LifeSmith.Scenes
 
         public override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(40, 40, 40)); // Dark gray background
+            GraphicsDevice.Clear(Color.Black);
 
-           SpriteBatch.Begin();
+            SpriteBatch.Begin();
 
-            // Draw title and info
-            SpriteBatch.DrawString(_font, _titleText, new Vector2(450, 20), Color.White);
+            // Draw Background (stretched to fit 1600x900)
+            if (_background != null)
+            {
+                SpriteBatch.Draw(_background, new Rectangle(0, 0, 1600, 900), Color.White);
+            }
+            
+            // Draw title and info at top
+            SpriteBatch.DrawString(_font, _titleText, new Vector2(600, 20), Color.White);
             SpriteBatch.DrawString(_font, _moneyText ?? "$0", new Vector2(50, 20), Color.Yellow);
             SpriteBatch.DrawString(_font, $"Day {GameStateManager.Instance.CurrentDay} - {GameStateManager.Instance.TimeOfDay}", 
-                new Vector2(1000, 20), Color.Cyan);
-            SpriteBatch.DrawString(_font, _instructions, new Vector2(150, 680), new Color(150, 150, 150));
+                new Vector2(1300, 20), Color.Cyan);
 
             // Draw interactables
             foreach (var interactable in _interactables)
             {
                 interactable.DrawRectangle(SpriteBatch, _pixelTexture);
                 
-                // Draw labels
-                var textSize = _font.MeasureString(interactable.Name);
-                var textPos = new Vector2(
-                    interactable.Bounds.Center.X - textSize.X / 2,
-                    interactable.Bounds.Center.Y - textSize.Y / 2
-                );
-                SpriteBatch.DrawString(_font, interactable.Name, textPos, Color.White);
+                // Draw labels only on hover for cleaner UI
+                if (interactable.IsHovered)
+                {
+                    var textSize = _font.MeasureString(interactable.Name);
+                    // Draw text background for readability
+                    var textBg = new Rectangle(
+                        interactable.Bounds.Center.X - (int)textSize.X / 2 - 5,
+                        interactable.Bounds.Center.Y - (int)textSize.Y / 2 - 5,
+                        (int)textSize.X + 10,
+                        (int)textSize.Y + 10
+                    );
+                    SpriteBatch.Draw(_pixelTexture, textBg, new Color(0, 0, 0, 200));
+
+                    var textPos = new Vector2(
+                        interactable.Bounds.Center.X - textSize.X / 2,
+                        interactable.Bounds.Center.Y - textSize.Y / 2
+                    );
+                    SpriteBatch.DrawString(_font, interactable.Name, textPos, Color.White);
+                }
             }
 
             SpriteBatch.End();

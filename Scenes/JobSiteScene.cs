@@ -35,8 +35,8 @@ namespace LifeSmith.Scenes
             _font = Game.Content.Load<SpriteFont>("DefaultFont");
             _currentHouse = JobManager.Instance.CurrentJob;
             
-            // Initialize dialog box
-            var dialogBounds = new Rectangle(50, 450, 1180, 250);
+            // Initialize dialog box (adjusted for 1600x900)
+            var dialogBounds = new Rectangle(50, 550, 1500, 300);
             _dialogBox = new DialogBoxUI(GraphicsDevice, dialogBounds);
             
             // Start greeting dialog
@@ -161,9 +161,9 @@ namespace LifeSmith.Scenes
                     }
                 }
 
-                // Return home button
+                // Return home button (adjusted for 1600x900, above nav bar at 780)
                 var returnButton = new InteractableObject(
-                    new Rectangle(1000, 600, 150, 60),
+                    new Rectangle(1350, 700, 200, 60),
                     "Return Home",
                     OnReturnHome
                 )
@@ -199,7 +199,7 @@ namespace LifeSmith.Scenes
             }
 
             // 2. Start lock picking minigame (Default action)
-            var minigameBounds = new Rectangle(200, 100, 880, 520);
+            var minigameBounds = new Rectangle(250, 150, 1100, 600);
             
             // Check for upgrades
             float extraTolerance = 0f;
@@ -343,13 +343,13 @@ namespace LifeSmith.Scenes
                 return; // Don't draw anything else
             }
 
-            // Draw title
-            SpriteBatch.DrawString(_font, $"{_currentHouse.ResidentName}'s House", new Vector2(450, 20), Color.Black);
+            // Draw title (adjusted for 1600x900)
+            SpriteBatch.DrawString(_font, $"{_currentHouse.ResidentName}'s House", new Vector2(650, 20), Color.Black);
             
             if (_lockPickingComplete)
             {
                 SpriteBatch.DrawString(_font, $"Time remaining: {(int)_explorationTimeRemaining}s", 
-                    new Vector2(50, 620), Color.Red);
+                    new Vector2(50, 750), Color.Red); // Adjusted for 1600x900, above nav bar
             }
 
             // Draw interactables

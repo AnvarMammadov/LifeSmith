@@ -7,17 +7,27 @@ using System.Collections.Generic;
 
 namespace LifeSmith.UI
 {
+    /// <summary>
+    /// Modern inventory UI with grid layout for 1600x900 resolution.
+    /// Visual novel-style design with proper spacing and aesthetics.
+    /// </summary>
     public class InventoryUI
     {
+        private UIPanel _panel;
         private Texture2D _pixelTexture;
         private SpriteFont _font;
         private bool _isVisible = false;
-        private Rectangle _panelBounds;
+        
+        // Layout constants for 1600x900
+        private const int PANEL_WIDTH = 800;
+        private const int PANEL_HEIGHT = 600;
+        private const int PANEL_X = (1600 - PANEL_WIDTH) / 2; // Centered: 400
+        private const int PANEL_Y = 150;
         
         // Grid setup
-        private int _slotSize = 80;
-        private int _padding = 10;
-        private int _cols = 5;
+        private int _slotSize = 100;
+        private int _padding = 12;
+        private int _cols = 6;
         
         public InventoryUI(GraphicsDevice graphicsDevice, SpriteFont font)
         {
@@ -25,13 +35,14 @@ namespace LifeSmith.UI
             _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
             
-            // Center panel (600x400)
-            _panelBounds = new Rectangle(
-                (1280 - 600) / 2, 
-                (720 - 400) / 2, 
-                600, 
-                400
-            );
+            // Create main panel with gradient
+            _panel = new UIPanel(graphicsDevice, 
+                new Rectangle(PANEL_X, PANEL_Y, PANEL_WIDTH, PANEL_HEIGHT));
+            _panel.UseGradient = true;
+            _panel.GradientTopColor = new Color(30, 35, 50, 240);
+            _panel.GradientBottomColor = new Color(20, 25, 40, 250);
+            _panel.BorderColor = new Color(80, 90, 120, 255);
+            _panel.BorderThickness = 3;
         }
 
         public void Update()
@@ -39,8 +50,13 @@ namespace LifeSmith.UI
             if (InputManager.Instance.WasKeyJustPressed(Keys.Tab) || 
                 InputManager.Instance.WasKeyJustPressed(Keys.I))
             {
-                _isVisible = !_isVisible;
+                Toggle();
             }
+        }
+
+        public void Toggle()
+        {
+            _isVisible = !_isVisible;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -48,25 +64,36 @@ namespace LifeSmith.UI
             if (!_isVisible) return;
 
             // Draw semi-transparent background overlay
-            spriteBatch.Draw(_pixelTexture, new Rectangle(0, 0, 1280, 720), new Color(0, 0, 0, 150));
+            spriteBatch.Draw(_pixelTexture, new Rectangle(0, 0, 1600, 900), new Color(0, 0, 0, 180));
 
-            // Draw Panel Background
-            spriteBatch.Draw(_pixelTexture, _panelBounds, new Color(40, 40, 40));
+            // Draw Panel
+            _panel.Draw(spriteBatch);
             
             // Draw Title
-            spriteBatch.DrawString(_font, "INVENTORY", 
-                new Vector2(_panelBounds.X + 20, _panelBounds.Y + 20), Color.White);
+            string title = "INVENTORY";
+            Vector2 titleSize = _font.MeasureString(title);
+            spriteBatch.DrawString(_font, title, 
+                new Vector2(_panel.Bounds.X + 30, _panel.Bounds.Y + 25), 
+                new Color(220, 220, 255));
             
             // Draw Money
             string moneyText = $"Money: ${GameStateManager.Instance.Money}";
             Vector2 moneySize = _font.MeasureString(moneyText);
             spriteBatch.DrawString(_font, moneyText, 
-                new Vector2(_panelBounds.Right - moneySize.X - 20, _panelBounds.Y + 20), Color.LightGreen);
+                new Vector2(_panel.Bounds.Right - moneySize.X - 30, _panel.Bounds.Y + 25), 
+                Color.LightGreen);
+
+            // Draw Close Hint
+            string closeHint = "Press TAB or I to close";
+            Vector2 hintSize = _font.MeasureString(closeHint);
+            spriteBatch.DrawString(_font, closeHint,
+                new Vector2(_panel.Bounds.Center.X - hintSize.X / 2, _panel.Bounds.Y + 25),
+                new Color(150, 150, 150));
 
             // Draw Items Grid
             var items = GameStateManager.Instance.Inventory;
-            int startX = _panelBounds.X + 30;
-            int startY = _panelBounds.Y + 60;
+            int startX = _panel.Bounds.X + 40;
+            int startY = _panel.Bounds.Y + 80;
             
             for (int i = 0; i < items.Count; i++)
             {
@@ -80,36 +107,84 @@ namespace LifeSmith.UI
                     _slotSize
                 );
                 
-                // Draw Slot Background
+                // Check if slot is within panel bounds
+                if (slotRect.Bottom > _panel.Bounds.Bottom - 20)
+                    break; // Don't draw slots outside panel
+                
                 bool isHovered = slotRect.Contains(InputManager.Instance.MousePosition);
-                spriteBatch.Draw(_pixelTexture, slotRect, isHovered ? Color.Gray : Color.DarkGray);
                 
-                // Draw Item Icon (Placeholder: First letter)
+                // Draw Slot Background with border
+                Color slotBgColor = isHovered ? new Color(60, 70, 90, 255) : new Color(40, 50, 70, 220);
+                Color slotBorderColor = isHovered ? new Color(120, 140, 180, 255) : new Color(70, 80, 100, 255);
+                
+                // Border
+                int borderSize = 2;
+                spriteBatch.Draw(_pixelTexture, 
+                    new Rectangle(slotRect.X - borderSize, slotRect.Y - borderSize, 
+                        slotRect.Width + borderSize * 2, slotRect.Height + borderSize * 2), 
+                    slotBorderColor);
+                
+                // Background
+                spriteBatch.Draw(_pixelTexture, slotRect, slotBgColor);
+                
+                // Draw Item Icon (placeholder: first 2-3 letters)
                 string itemName = items[i];
-                string alias = itemName.Length > 2 ? itemName.Substring(0, 2).ToUpper() : itemName;
+                string alias = itemName.Length > 3 ? itemName.Substring(0, 3).ToUpper() : itemName.ToUpper();
                 
-                // Try to get icon from TextureManager (will return placeholder if not found)
-                // spriteBatch.Draw(TextureManager.Instance.Get(itemName), slotRect, Color.White); 
-                // For now, text representation
                 Vector2 textSize = _font.MeasureString(alias);
-                spriteBatch.DrawString(_font, alias, 
-                    new Vector2(slotRect.Center.X - textSize.X / 2, slotRect.Center.Y - textSize.Y / 2), 
-                    Color.White);
+                Vector2 textPos = new Vector2(
+                    slotRect.Center.X - textSize.X / 2, 
+                    slotRect.Center.Y - textSize.Y / 2
+                );
+                spriteBatch.DrawString(_font, alias, textPos, Color.White);
                 
-                // Tooltip
+                // Tooltip on hover
                 if (isHovered)
                 {
-                    string tooltip = itemName; // Can look up description later
+                    string tooltip = itemName;
                     Vector2 tipSize = _font.MeasureString(tooltip);
                     Rectangle tipRect = new Rectangle(
-                        slotRect.Right + 5, slotRect.Top, 
-                        (int)tipSize.X + 10, (int)tipSize.Y + 10);
+                        slotRect.Right + 10, 
+                        slotRect.Top, 
+                        (int)tipSize.X + 20, 
+                        (int)tipSize.Y + 20
+                    );
                     
-                    spriteBatch.Draw(_pixelTexture, tipRect, Color.Black);
+                    // Make sure tooltip doesn't go off screen
+                    if (tipRect.Right > 1600)
+                    {
+                        tipRect.X = slotRect.Left - tipRect.Width - 10;
+                    }
+                    
+                    // Tooltip background
+                    spriteBatch.Draw(_pixelTexture, tipRect, new Color(10, 10, 20, 240));
+                    // Tooltip border
+                    spriteBatch.Draw(_pixelTexture, 
+                        new Rectangle(tipRect.X - 1, tipRect.Y - 1, tipRect.Width + 2, tipRect.Height + 2),
+                        new Color(100, 100, 120, 255));
+                    spriteBatch.Draw(_pixelTexture, tipRect, new Color(10, 10, 20, 240));
+                    
+                    // Tooltip text
                     spriteBatch.DrawString(_font, tooltip, 
-                        new Vector2(tipRect.X + 5, tipRect.Y + 5), Color.White);
+                        new Vector2(tipRect.X + 10, tipRect.Y + 10), Color.White);
                 }
             }
+            
+            // Empty slots message if no items
+            if (items.Count == 0)
+            {
+                string emptyMsg = "Your inventory is empty";
+                Vector2 emptySize = _font.MeasureString(emptyMsg);
+                spriteBatch.DrawString(_font, emptyMsg,
+                    new Vector2(_panel.Bounds.Center.X - emptySize.X / 2, startY + 100),
+                    new Color(120, 120, 140));
+            }
+        }
+
+        public void Dispose()
+        {
+            _panel?.Dispose();
+            _pixelTexture?.Dispose();
         }
     }
 }

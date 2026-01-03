@@ -19,9 +19,9 @@ namespace LifeSmith
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            // Set resolution to 1280x720
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            // Set resolution to 1600x900 (Visual Novel standard)
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
         }
 
         protected override void Initialize()
