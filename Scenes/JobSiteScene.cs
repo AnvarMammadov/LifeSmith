@@ -126,6 +126,41 @@ namespace LifeSmith.Scenes
                 };
                 _interactables.Add(braItem);
 
+                _interactables.Add(braItem);
+                
+                // Key Copying (Advanced Mechanic)
+                string keyId = $"key_{_currentHouse.ResidentName}";
+                if (GameStateManager.Instance.HasTool("key_copier"))
+                {
+                    if (!GameStateManager.Instance.Inventory.Contains(keyId))
+                    {
+                        var copyKeyButton = new InteractableObject(
+                            new Rectangle(800, 150, 150, 60),
+                            "Copy Key",
+                            OnCopyKey
+                        )
+                        {
+                            IdleColor = new Color(255, 215, 0), // Gold
+                            HoverColor = new Color(255, 255, 100)
+                        };
+                        _interactables.Add(copyKeyButton);
+                    }
+                    else
+                    {
+                         // Show copied indicator
+                         var copiedIndicator = new InteractableObject(
+                            new Rectangle(800, 150, 150, 60),
+                            "Key Copied!",
+                            null
+                        )
+                        {
+                            IdleColor = Color.Gray,
+                            HoverColor = Color.Gray
+                        };
+                        _interactables.Add(copiedIndicator);
+                    }
+                }
+
                 // Return home button
                 var returnButton = new InteractableObject(
                     new Rectangle(1000, 600, 150, 60),
@@ -196,6 +231,14 @@ namespace LifeSmith.Scenes
             {
                 _currentHouse.DiscoveredItems.Add(itemName);
             }
+        }
+        
+        private void OnCopyKey()
+        {
+            string keyId = $"key_{_currentHouse.ResidentName}"; // Using Name as ID for simplicity
+            GameStateManager.Instance.Inventory.Add(keyId);
+            System.Console.WriteLine($"Key copied: {keyId}");
+            _needsRefresh = true;
         }
 
         private void OnReturnHome()

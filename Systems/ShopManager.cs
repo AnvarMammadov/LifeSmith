@@ -22,7 +22,7 @@ namespace LifeSmith.Systems
                 new ShopItem("advanced_lockpick", "Advanced Lockpick Set", 150, "Wider sweet spot tolerance. Makes lockpicking easier."),
                 new ShopItem("flashlight", "Tactical Flashlight", 100, "Better visibility during night infiltration."),
                 new ShopItem("tension_wrench", "Titanium Tension Wrench", 200, "Prevents lockpicks from breaking easily (More time)."),
-                new ShopItem("skeleton_key", "Skeleton Key (Placeholder)", 500, "Instantly opens simple locks. (Consumable)", false),
+                new ShopItem("key_copier", "Portable Key Copier", 500, "Copy keys instantly. Allows Front Door entry at night."),
                 new ShopItem("camera", "Mini Spy Camera", 300, "Gather more intel during day visits.")
             };
         }

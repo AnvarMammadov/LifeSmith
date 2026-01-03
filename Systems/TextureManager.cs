@@ -37,13 +37,18 @@ namespace LifeSmith.Systems
                 _textures[name] = texture;
                 return texture;
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
-                System.Console.WriteLine($"Failed to load texture '{name}': {ex.Message}");
-                // In future, return placeholder
+                // Return placeholder silently or log
                 return _placeholderTexture; 
             }
         }
+        
+        // Helper Methods for Organized Folders
+        public Texture2D GetBackground(string name) => Get($"Images/Backgrounds/{name}");
+        public Texture2D GetCharacter(string name) => Get($"Images/Characters/{name}");
+        public Texture2D GetUI(string name) => Get($"Images/UI/{name}");
+        public Texture2D GetItem(string name) => Get($"Images/Items/{name}");
         
         // Helper to load raw png from disk (Modding support)
         public Texture2D LoadFromFile(string path, GraphicsDevice graphicsDevice)

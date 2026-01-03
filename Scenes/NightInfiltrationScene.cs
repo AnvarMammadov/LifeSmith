@@ -53,6 +53,24 @@ namespace LifeSmith.Scenes
             if (!_entrySuccessful)
             {
                 int yPos = 150;
+                
+                // Check for copied key (Advanced Entry)
+                string keyId = $"key_{_currentHouse.ResidentName}";
+                if (GameStateManager.Instance.Inventory.Contains(keyId))
+                {
+                    var keyButton = new InteractableObject(
+                        new Rectangle(400, yPos, 400, 70),
+                        "Use Copied Key (Front Door) - 100%",
+                        OnKeyEntry
+                    )
+                    {
+                        IdleColor = new Color(255, 215, 0), // Gold
+                        HoverColor = new Color(255, 255, 100)
+                    };
+                    _interactables.Add(keyButton);
+                    yPos += 90;
+                }
+
                 foreach (var entry in _preparedEntries)
                 {
                     var entryButton = new InteractableObject(
@@ -143,6 +161,13 @@ namespace LifeSmith.Scenes
                 
                 _needsRefresh = true; // Set flag instead of calling directly
             }
+        }
+
+        private void OnKeyEntry()
+        {
+            _statusMessage = "Success! Unlocked Front Door with key.";
+            _entrySuccessful = true;
+            _needsRefresh = true;
         }
 
         private void OnCollectItems()
