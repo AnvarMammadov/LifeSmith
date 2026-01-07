@@ -42,6 +42,8 @@ namespace LifeSmith.Systems
         {
             return _currentKeyboardState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
         }
+        
+        public bool IsKeyJustPressed(Keys key) => WasKeyJustPressed(key);
 
         public bool IsMouseInRectangle(Rectangle rect)
         {

@@ -45,8 +45,8 @@ namespace LifeSmith
                 System.Console.WriteLine("Save file found. Press F9 to load.");
             }
             
-            // Start with player apartment scene
-            SceneManager.ChangeScene(new PlayerApartmentScene());
+            // Start with classroom prologue
+            SceneManager.ChangeScene(new ClassroomPrologueScene());
         }
 
         protected override void Update(GameTime gameTime)
