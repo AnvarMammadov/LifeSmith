@@ -6,7 +6,11 @@ using System.Collections.Generic;
 
 namespace LifeSmith.Scenes
 {
-    public class PlayerApartmentScene : Scene
+    /// <summary>
+    /// Home scene - Teacher's apartment where Ayako visits for tutoring
+    /// Central hub for evening tutoring sessions
+    /// </summary>
+    public class HomeScene : Scene
     {
         private Texture2D _pixelTexture;
         private Texture2D _background;
@@ -63,6 +67,8 @@ namespace LifeSmith.Scenes
             _interactables.Add(debugMoney);
         }
 
+ // TODO: Refactor for TryTeach - No job system
+        /*
         private void OnPhoneClicked()
         {
             System.Console.WriteLine("Phone clicked!");
@@ -87,28 +93,22 @@ namespace LifeSmith.Scenes
                 System.Console.WriteLine($"Exception in OnPhoneClicked: {ex.Message}");
             }
         }
+        */
 
         private void OnBedClicked()
         {
             // Advance time
             GameStateManager.Instance.AdvanceTime();
             
-            // If it's night and we have a completed day job, go to night infiltration
-            if (GameStateManager.Instance.TimeOfDay == TimeOfDay.Night && 
-                JobManager.Instance.CurrentJob != null)
-            {
-                Game.SceneManager.ChangeScene(new NightInfiltrationScene());
-            }
+            // TODO: Handle time transitions for TryTeach
+            // If evening, prepare for Ayako's visit, etc.
         }
 
         private void OnDoorClicked()
         {
-            // Go to job site during day
-            if (GameStateManager.Instance.TimeOfDay == TimeOfDay.Day && 
-                JobManager.Instance.CurrentJob != null)
-            {
-                Game.SceneManager.ChangeScene(new JobSiteScene());
-            }
+            // TODO: TryTeach - Navigate to work or other locations
+            // For now, just go to shop
+            Game.SceneManager.ChangeScene(new ShopScene());
         }
         
         private void OnLaptopClicked()

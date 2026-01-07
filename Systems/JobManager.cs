@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using LifeSmith.Content;
+// using LifeSmith.Content; // Removed - House.cs deleted for TryTeach
 using LifeSmith.Core;
 
 namespace LifeSmith.Systems
@@ -9,15 +9,18 @@ namespace LifeSmith.Systems
         private static JobManager _instance;
         public static JobManager Instance => _instance ??= new JobManager();
 
-        public List<House> AvailableJobs { get; private set; } = new();
-        public House CurrentJob { get; private set; }
+        // TODO: Refactor for TryTeach - Remove job system
+        // public List<House> AvailableJobs { get; private set; } = new();
+        // public House CurrentJob { get; private set; }
 
         private JobManager()
         {
-            // Initialize with first job
-            CreateFirstJob();
+            // TODO: Remove for TryTeach - No job system
+            // CreateFirstJob();
         }
 
+        // TODO: Remove for TryTeach
+        /*
         private void CreateFirstJob()
         {
             var firstHouse = new House(
@@ -35,13 +38,19 @@ namespace LifeSmith.Systems
 
             AvailableJobs.Add(firstHouse);
         }
+        */
 
+        // TODO: Remove for TryTeach
+        /*
         public void AcceptJob(House job)
         {
             CurrentJob = job;
             GameStateManager.Instance.CurrentJobHouseId = job.Id;
         }
+        */
 
+        // TODO: Remove for TryTeach
+        /*
         public void CompleteJob()
         {
             if (CurrentJob != null)
@@ -51,5 +60,6 @@ namespace LifeSmith.Systems
                 CurrentJob = null;
             }
         }
+        */
     }
 }

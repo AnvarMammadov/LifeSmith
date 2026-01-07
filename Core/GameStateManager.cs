@@ -169,7 +169,8 @@ namespace LifeSmith.Core
             AyakoStats.Grade = other.AyakoStats.Grade;
             AyakoStats.Affection = other.AyakoStats.Affection;
             AyakoStats.Lust = other.AyakoStats.Lust;
-            AyakoStats.Mood = other.AyakoStats.Mood;
+            AyakoStats.Suspicion = other.AyakoStats.Suspicion;
+            AyakoStats.Money = other.AyakoStats.Money;
         }
     }
 }

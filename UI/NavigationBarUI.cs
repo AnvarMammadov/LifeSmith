@@ -51,11 +51,11 @@ namespace LifeSmith.UI
             int yPos = PANEL_Y + 20; // 20px from top of panel
             int currentX = LEFT_MARGIN;
 
-            // 1. Phone Button
+            // 1. Phone Button - TODO: Refactor for TryTeach
             var phoneBtn = new UIButton(_game.GraphicsDevice, _font, 
                 new Rectangle(currentX, yPos, BUTTON_WIDTH, BUTTON_HEIGHT), 
                 "Phone");
-            phoneBtn.OnClick += OnPhoneClicked;
+            // phoneBtn.OnClick += OnPhoneClicked; // Disabled for now
             phoneBtn.IdleColor = new Color(45, 55, 75, 220);
             phoneBtn.HoverColor = new Color(65, 80, 110, 240);
             _buttons.Add(phoneBtn);
@@ -91,6 +91,8 @@ namespace LifeSmith.UI
             _buttons.Add(waitBtn);
         }
 
+        // TODO: Refactor for TryTeach - No job system
+        /*
         private void OnPhoneClicked()
         {
             // Accept first available job
@@ -105,20 +107,19 @@ namespace LifeSmith.UI
                 System.Console.WriteLine("No jobs available or job already active.");
             }
         }
+        */
 
         private void OnMapClicked()
         {
-            // Toggle between Home and Job
-            if (_game.SceneManager.CurrentScene is PlayerApartmentScene)
+            // Toggle between Home and Shop
+            if (_game.SceneManager.CurrentScene is HomeScene)
             {
-                if (JobManager.Instance.CurrentJob != null)
-                    _game.SceneManager.ChangeScene(new JobSiteScene());
-                else
-                    System.Console.WriteLine("No job to travel to.");
+                // TODO: Navigate to shop or other scenes
+                _game.SceneManager.ChangeScene(new ShopScene());
             }
             else
             {
-                _game.SceneManager.ChangeScene(new PlayerApartmentScene());
+                _game.SceneManager.ChangeScene(new HomeScene());
             }
         }
 
@@ -126,13 +127,8 @@ namespace LifeSmith.UI
         {
             GameStateManager.Instance.AdvanceTime();
             
-            // Check for night transition
-            if (GameStateManager.Instance.TimeOfDay == TimeOfDay.Night && 
-                JobManager.Instance.CurrentJob != null &&
-                _game.SceneManager.CurrentScene is PlayerApartmentScene)
-            {
-                _game.SceneManager.ChangeScene(new NightInfiltrationScene());
-            }
+            // TODO: Handle time transitions for TryTeach game
+            // Check for evening tutoring session, etc.
         }
 
         public void Update()

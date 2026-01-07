@@ -127,7 +127,7 @@ namespace LifeSmith.Scenes
                 if (_fadeAlpha >= 1f)
                 {
                     // Transition complete - change scene
-                    Game.SceneManager.ChangeScene(new PlayerApartmentScene());
+                    Game.SceneManager.ChangeScene(new HomeScene());
                 }
                 return;
             }

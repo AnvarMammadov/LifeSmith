@@ -72,7 +72,7 @@ namespace LifeSmith
                     var currentSceneType = SceneManager.CurrentScene.GetType();
                     // SceneManager.ChangeScene((Scene)System.Activator.CreateInstance(currentSceneType));
                     // Even simpler: Go to apartment
-                    SceneManager.ChangeScene(new PlayerApartmentScene());
+                    SceneManager.ChangeScene(new HomeScene());
                 }
             }
 

@@ -44,7 +44,7 @@ namespace LifeSmith.Scenes
                 if (_backButtonRect.Contains(InputManager.Instance.MousePosition))
                 {
                     // Return to apartment
-                    Game.SceneManager.ChangeScene(new PlayerApartmentScene());
+                    Game.SceneManager.ChangeScene(new HomeScene());
                     return;
                 }
             }
